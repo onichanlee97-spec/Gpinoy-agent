@@ -1,0 +1,88 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Local LLM to Cloud Generator"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <EditText
+        android:id="@+id/inputEditText"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:hint="Enter your concept here..."
+        android:gravity="top|start"
+        android:inputType="textMultiLine"
+        android:padding="12dp"
+        android:background="@android:drawable/editbox_background_normal"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <Button
+        android:id="@+id/generatePromptButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Run Local LLM Prompt Expansion"
+        app:layout_constraintTop_toBottomOf="@id/inputEditText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <TextView
+        android:id="@+id/promptOutputLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Optimized Local Prompt:"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/generatePromptButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:background="@android:drawable/dialog_holo_light_frame"
+        app:layout_constraintTop_toBottomOf="@id/promptOutputLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/promptOutputTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Local prompt output will appear here..."
+            android:padding="8dp"
+            android:textColor="@android:color/black"/>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/sendToCloudButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Send to Cloud (Gemini API)"
+        app:layout_constraintTop_toBottomOf="@id/scrollView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
