@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.content
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     private val PREFS_NAME = "CyberPrefs"
     private val KEY_API_KEY = "gemini_api_key"
 
+    private val chatHistory = mutableListOf<Pair<String, String>>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -40,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         promptOutputTextView = findViewById(R.id.promptOutputTextView)
         sendToCloudButton = findViewById(R.id.sendToCloudButton)
 
-        promptOutputTextView.text = "Void gateway online. Open the side drawer menu to configure your Gemini API key."
+        promptOutputTextView.text = "GP-Noy Agent online. Ready for execution. Configure your Gemini API key in the side drawer."
 
         menuButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
@@ -64,19 +67,21 @@ class MainActivity : AppCompatActivity() {
                 if (apiKey.isEmpty()) {
                     promptOutputTextView.text = "Error: API key not configured. Open side drawer to set your Gemini API key."
                 } else {
-                    generateCloudPrompt(userInput, apiKey)
+                    inputEditText.setText("")
+                    executeAgentTask(userInput, apiKey)
                 }
             }
         }
 
         sendToCloudButton.setOnClickListener {
-            val optimizedPrompt = promptOutputTextView.text.toString().trim()
-            if (optimizedPrompt.isNotEmpty() && !optimizedPrompt.startsWith("Void gateway") && !optimizedPrompt.startsWith("Error:")) {
+            val userInput = inputEditText.text.toString().trim()
+            if (userInput.isNotEmpty()) {
                 val apiKey = getStoredApiKey()
                 if (apiKey.isEmpty()) {
                     promptOutputTextView.text = "Error: API key not configured. Open side drawer to set your Gemini API key."
                 } else {
-                    generateCloudMedia(optimizedPrompt, apiKey)
+                    inputEditText.setText("")
+                    executeAgentTask(userInput, apiKey)
                 }
             }
         }
@@ -120,51 +125,43 @@ class MainActivity : AppCompatActivity() {
     private fun android.app.AlertDialog.Builder.negativeButton(text: String, onClick: (android.app.AlertDialog, Int) -> Unit) =
         this.setNegativeButton(text) { dialog, which -> onClick(dialog as android.app.AlertDialog, which) }
 
-    private fun generateCloudPrompt(input: String, apiKey: String) {
+    private fun executeAgentTask(userQuery: String, apiKey: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 withContext(Dispatchers.Main) {
-                    promptOutputTextView.text = "Querying Gemini 1.5 Pro for prompt refinement..."
+                    val currentText = promptOutputTextView.text.toString()
+                    promptOutputTextView.text = "$currentText\n\nUser: $userQuery\n\nGP-Noy Agent: Processing reasoning stream..."
                 }
 
                 val generativeModel = GenerativeModel(
                     modelName = "gemini-1.5-pro",
                     apiKey = apiKey
                 )
-                
-                val response = generativeModel.generateContent("Expand this short idea into a highly detailed artistic and technical visual generation prompt: $input")
-                
-                withContext(Dispatchers.Main) {
-                    promptOutputTextView.text = response.text ?: "Cloud response was empty."
-                }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    promptOutputTextView.text = "Cloud Error: ${e.localizedMessage}"
-                }
-            }
-        }
-    }
 
-    private fun generateCloudMedia(prompt: String, apiKey: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            try {
-                withContext(Dispatchers.Main) {
-                    promptOutputTextView.text = "Generating media specifications via Gemini cloud..."
-                }
-
-                val generativeModel = GenerativeModel(
-                    modelName = "gemini-1.5-pro",
-                    apiKey = apiKey
+                val chat = generativeModel.startChat(
+                    history = chatHistory.map { (role, text) ->
+                        content(role) { text(text) }
+                    }
                 )
-                
-                val response = generativeModel.generateContent("Create a comprehensive media generation and rendering breakdown based on this prompt: $prompt")
-                
+
+                val response = chat.sendMessage(userQuery)
+                val agentResponse = response.text ?: "Agent returned empty neural payload."
+
+                chatHistory.add("user" to userQuery)
+                chatHistory.add("model" to agentResponse)
+
                 withContext(Dispatchers.Main) {
-                    promptOutputTextView.text = response.text ?: "Media generation returned void."
+                    promptOutputTextView.text = buildString {
+                        for ((role, text) in chatHistory) {
+                            val prefix = if (role == "user") "User: " else "GP-Noy Agent: "
+                            append("$prefix$text\n\n")
+                        }
+                    }.trimEnd()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    promptOutputTextView.text = "Generation Error: ${e.localizedMessage}"
+                    val currentText = promptOutputTextView.text.toString()
+                    promptOutputTextView.text = "$currentText\n\nAgent Execution Error: ${e.localizedMessage}"
                 }
             }
         }
