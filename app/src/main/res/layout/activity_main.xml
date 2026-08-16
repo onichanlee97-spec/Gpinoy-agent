@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- Top Header Bar with Model Selector Dropdown -->
+                <!-- Top Header Bar with ChatGPT Style Hamburger Icon -->
                 <LinearLayout
                     android:id="@+id/headerLayout"
                     android:layout_width="match_parent"
@@ -28,15 +28,15 @@
                     android:gravity="center_vertical"
                     android:paddingHorizontal="16dp">
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/menuButton"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/cyber_bubble"
-                        android:text="≡"
-                        android:textColor="#00F0FF"
-                        android:textSize="18sp"
-                        android:textStyle="bold"/>
+                        android:src="@drawable/ic_hamburger"
+                        android:scaleType="centerInside"
+                        android:padding="8dp"
+                        android:contentDescription="Open Navigation Drawer"/>
 
                     <Spinner
                         android:id="@+id/modelSpinner"
@@ -52,7 +52,7 @@
                         android:layout_height="40dp"/>
                 </LinearLayout>
 
-                <!-- Chat Messages Scroll Area with Dynamic Size-Dependent Bubbles -->
+                <!-- Chat Messages Scroll Area -->
                 <ScrollView
                     android:id="@+id/scrollView"
                     android:layout_width="match_parent"
@@ -70,23 +70,10 @@
                         android:orientation="vertical"
                         android:gravity="bottom">
 
-                        <TextView
-                            android:id="@+id/promptOutputTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            android:maxWidth="280dp"
-                            android:background="@drawable/agent_bubble"
-                            android:padding="16dp"
-                            android:text="GP-Noy Agent online.\nConfigure your Gemini API key in the side drawer menu."
-                            android:textColor="#E0F7FA"
-                            android:textSize="15sp"
-                            android:layout_marginBottom="12dp"/>
-
                     </LinearLayout>
                 </ScrollView>
 
-                <!-- ChatGPT Style Floating Input Bubble -->
+                <!-- ChatGPT Style Floating Input Bubble with Vector Send Icon -->
                 <LinearLayout
                     android:id="@+id/inputContainer"
                     android:layout_width="match_parent"
@@ -113,16 +100,15 @@
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="8dp"/>
 
-                    <Button
+                    <ImageButton
                         android:id="@+id/sendAgentButton"
                         android:layout_width="44dp"
                         android:layout_height="44dp"
                         android:background="@drawable/cyber_bubble"
-                        android:text="↑"
-                        android:textColor="#00F0FF"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textAllCaps="false"/>
+                        android:src="@drawable/ic_send"
+                        android:scaleType="centerInside"
+                        android:padding="10dp"
+                        android:contentDescription="Send Message"/>
 
                 </LinearLayout>
 
