@@ -61,7 +61,6 @@ class MainActivity : AppCompatActivity() {
         chatContainer = findViewById(R.id.chatContainer)
         scrollView = findViewById(R.id.scrollView)
 
-        // Initial empty chat state with zero onboarding spam messages
         chatContainer.removeAllViews()
 
         setupModelSpinner()
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity() {
             } else {
                 inputEditText.setText("")
                 addMessageBubble(userInput, true)
-                executeAgentTaskWithStreamingAndSelfCorrection(userInput, apiKey)
+                executeAgentTaskWithPartialStreamingAndAutoCorrection(userInput, apiKey)
             }
         }
     }
@@ -137,7 +136,6 @@ class MainActivity : AppCompatActivity() {
         builder.setPositiveButton("Save") { _, _ ->
             val newKey = input.text.toString().trim()
             saveApiKey(newKey)
-            // Startup onboarding messages removed completely
         }
         builder.setNegativeButton("Cancel") { dialog, _ ->
             dialog.cancel()
@@ -183,11 +181,11 @@ class MainActivity : AppCompatActivity() {
         return bubbleTextView
     }
 
-    private fun executeAgentTaskWithStreamingAndSelfCorrection(userQuery: String, apiKey: String) {
+    private fun executeAgentTaskWithPartialStreamingAndAutoCorrection(userQuery: String, apiKey: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            // Transient thinking status indicator
+            // Immediate partial thinking state bubble
             val responseBubble = withContext(Dispatchers.Main) {
-                addMessageBubble("GP-Noy Agent is analyzing stream...", false)
+                addMessageBubble("GP-Noy Agent is gathering information...", false)
             }
 
             val startIndex = modelList.indexOf(selectedModel)
@@ -208,14 +206,12 @@ class MainActivity : AppCompatActivity() {
                         apiKey = apiKey
                     )
 
-                    // Strict session isolation: chat history strictly limited to current session turns
                     val chat = generativeModel.startChat(
                         history = currentSessionHistory.map { (role, text) ->
                             content(role) { text(text) }
                         }
                     )
 
-                    // Progressive generation with streaming reconciliation
                     val responseFlow = chat.sendMessageStream(userQuery)
                     var accumulatedText = ""
 
@@ -223,18 +219,18 @@ class MainActivity : AppCompatActivity() {
                         val chunkText = chunk.text ?: ""
                         accumulatedText += chunkText
                         
-                        // Self-correction pass during streaming reconciliation
-                        val reconciledText = applySelfCorrection(accumulatedText)
+                        // Real-time auto-correction pass on partially gathered information
+                        val correctedPartialText = applyRealTimeAutoCorrection(accumulatedText)
 
                         withContext(Dispatchers.Main) {
-                            responseBubble.text = reconciledText
+                            responseBubble.text = correctedPartialText
                             scrollView.post {
                                 scrollView.fullScroll(ScrollView.FOCUS_DOWN)
                             }
                         }
                     }
 
-                    finalStreamedResponse = applySelfCorrection(accumulatedText)
+                    finalStreamedResponse = applyRealTimeAutoCorrection(accumulatedText)
                     success = true
                     selectedModel = model
                     break
@@ -257,21 +253,23 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Progressive streaming reconciliation and self-correction pass
-     * Inspects token fragments for logical contradictions, syntax errors, or formatting anomalies
-     * and reconciles them in real-time before committing text to the UI bubble.
+     * Real-time auto-correction and synthesis pass for partial and incoming tokens
+     * Cleans formatting artifacts, normalizes punctuation, and reconciles syntax anomalies
+     * as information streams in during the thinking/generation state.
      */
-    private fun applySelfCorrection(rawStreamText: String): String {
-        var corrected = rawStreamText.trim()
+    private fun applyRealTimeAutoCorrection(partialText: String): String {
+        var corrected = partialText.trim()
         
-        // Example self-correction rules for model reasoning stability
-        if (corrected.startsWith("Error:") || corrected.contains("Correction:")) {
-            // Reconcile tone anomalies
-        }
+        // Auto-correct common token stuttering or duplicate punctuation artifacts during partial streams
+        corrected = corrected.replace("  ", " ")
+        corrected = corrected.replace("..", ".")
         
-        // Strip out trailing incomplete punctuation artifacts during streaming
-        if (corrected.endsWith("```") && !corrected.contains("\n```")) {
-            // Keep stream intact
+        // Ensure initial capitalization on streaming chunks if sentence breaks occur
+        if (corrected.isNotEmpty() && corrected.length > 2) {
+            val firstChar = corrected[0]
+            if (firstChar.isLowerCase() && !corrected.startsWith("http")) {
+                corrected = firstChar.uppercaseChar() + corrected.substring(1)
+            }
         }
 
         return corrected
