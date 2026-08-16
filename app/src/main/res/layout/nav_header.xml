@@ -1,0 +1,29 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="@drawable/cyber_drawer_background"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cybernetic Gemini Gateway"
+        android:textColor="#00F0FF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:shadowColor="#8000F0FF"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="6" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Secure API Configuration"
+        android:textColor="#80FFFFFF"
+        android:textSize="12sp" />
+
+</LinearLayout>
