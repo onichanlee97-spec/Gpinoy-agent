@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity() {
 
                 val generativeModel = GenerativeModel(
                     modelName = "gemini-1.5-pro",
-                    apiKey = "YOUR_GEMINI_API_KEY"
+                    apiKey = "AQ.Ab8RN6L6HtLJZy36Y2NkZjoykNde5rePXffIEy1BtFRVKJ8Odw"
                 )
                 
                 val response = generativeModel.generateContent("Create a comprehensive media generation specification based on this prompt: $prompt")
