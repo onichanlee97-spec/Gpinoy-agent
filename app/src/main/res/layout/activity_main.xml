@@ -1,108 +1,161 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/void_background">
+    android:layout_height="match_parent">
 
-    <com.example.localtoycloud.GyroscopeView
-        android:id="@+id/gyroscopeContainer"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp">
+        android:background="@drawable/void_background">
 
-        <LinearLayout
+        <com.example.localtoycloud.GyroscopeView
+            android:id="@+id/gyroscopeContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom">
-
-            <ScrollView
-                android:id="@+id/scrollView"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:fillViewport="true"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingBottom="16dp">
-
-                    <TextView
-                        android:id="@+id/promptOutputTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/cyber_bubble"
-                        android:padding="16dp"
-                        android:text="Void space initialized. Awaiting user input for local MediaPipe expansion..."
-                        android:textColor="#E0F7FA"
-                        android:textSize="15sp"
-                        android:shadowColor="#8000F0FF"
-                        android:shadowDx="0"
-                        android:shadowDy="0"
-                        android:shadowRadius="8" />
-
-                </LinearLayout>
-            </ScrollView>
+            android:padding="16dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:background="@drawable/cyber_bubble"
-                android:padding="12dp"
-                android:layout_marginTop="12dp">
-
-                <EditText
-                    android:id="@+id/inputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:hint="Enter concept into the void..."
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#80FFFFFF"
-                    android:textSize="16sp"
-                    android:inputType="textMultiLine"
-                    android:maxLines="4"
-                    android:padding="8dp"/>
+                android:gravity="bottom">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="8dp">
+                    android:gravity="center_vertical"
+                    android:paddingBottom="12dp">
 
                     <Button
-                        android:id="@+id/generatePromptButton"
+                        android:id="@+id/menuButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/cyber_bubble"
+                        android:text="≡"
+                        android:textColor="#00F0FF"
+                        android:textSize="20sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@drawable/cyber_bubble"
-                        android:text="Local LLM"
+                        android:gravity="center"
+                        android:text="Gemini Cyber Gateway"
                         android:textColor="#00F0FF"
-                        android:textSize="12sp"
-                        android:textAllCaps="false"/>
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:shadowColor="#8000F0FF"
+                        android:shadowRadius="6"/>
 
                     <Space
-                        android:layout_width="8dp"
-                        android:layout_height="wrap_content"/>
-
-                    <Button
-                        android:id="@+id/sendToCloudButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@drawable/cyber_bubble"
-                        android:text="Cloud Gemini"
-                        android:textColor="#FF007F"
-                        android:textSize="12sp"
-                        android:textAllCaps="false"/>
-
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"/>
                 </LinearLayout>
+
+                <ScrollView
+                    android:id="@+id/scrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingBottom="16dp">
+
+                        <TextView
+                            android:id="@+id/promptOutputTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/cyber_bubble"
+                            android:padding="16dp"
+                            android:text="Void gateway online. Configure your Gemini API key in the side drawer menu."
+                            android:textColor="#E0F7FA"
+                            android:textSize="15sp"
+                            android:shadowColor="#8000F0FF"
+                            android:shadowDx="0"
+                            android:shadowDy="0"
+                            android:shadowRadius="8" />
+
+                    </LinearLayout>
+                </ScrollView>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/cyber_bubble"
+                    android:padding="12dp"
+                    android:layout_marginTop="12dp">
+
+                    <EditText
+                        android:id="@+id/inputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/transparent"
+                        android:hint="Enter concept into the void..."
+                        android:textColor="#FFFFFF"
+                        android:textColorHint="#80FFFFFF"
+                        android:textSize="16sp"
+                        android:inputType="textMultiLine"
+                        android:maxLines="4"
+                        android:padding="8dp"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="8dp">
+
+                        <Button
+                            android:id="@+id/generatePromptButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/cyber_bubble"
+                            android:text="Refine Prompt"
+                            android:textColor="#00F0FF"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"/>
+
+                        <Space
+                            android:layout_width="8dp"
+                            android:layout_height="wrap_content"/>
+
+                        <Button
+                            android:id="@+id/sendToCloudButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/cyber_bubble"
+                            android:text="Generate Media"
+                            android:textColor="#FF007F"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
             </LinearLayout>
+        </com.example.localtoycloud.GyroscopeView>
 
-        </LinearLayout>
-    </com.example.localtoycloud.GyroscopeView>
+    </FrameLayout>
 
-</FrameLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@drawable/cyber_drawer_background"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_menu"
+        app:itemTextColor="#E0F7FA"
+        app:itemIconTint="#00F0FF"/>
+
+</androidx.drawerlayout.widget.DrawerLayout>
