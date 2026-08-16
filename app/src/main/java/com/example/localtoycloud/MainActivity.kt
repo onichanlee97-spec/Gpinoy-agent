@@ -22,9 +22,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     private lateinit var menuButton: Button
     private lateinit var inputEditText: EditText
-    private lateinit var generatePromptButton: Button
+    private lateinit var sendAgentButton: Button
     private lateinit var promptOutputTextView: TextView
-    private lateinit var sendToCloudButton: Button
 
     private val PREFS_NAME = "CyberPrefs"
     private val KEY_API_KEY = "gemini_api_key"
@@ -39,11 +38,10 @@ class MainActivity : AppCompatActivity() {
         navigationView = findViewById(R.id.navigationView)
         menuButton = findViewById(R.id.menuButton)
         inputEditText = findViewById(R.id.inputEditText)
-        generatePromptButton = findViewById(R.id.generatePromptButton)
+        sendAgentButton = findViewById(R.id.sendAgentButton)
         promptOutputTextView = findViewById(R.id.promptOutputTextView)
-        sendToCloudButton = findViewById(R.id.sendToCloudButton)
 
-        promptOutputTextView.text = "GP-Noy Agent online. Ready for execution. Configure your Gemini API key in the side drawer."
+        promptOutputTextView.text = "GP-Noy Agent online. Configure your Gemini API key in the side drawer menu."
 
         menuButton.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.START)
@@ -60,20 +58,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        generatePromptButton.setOnClickListener {
-            val userInput = inputEditText.text.toString().trim()
-            if (userInput.isNotEmpty()) {
-                val apiKey = getStoredApiKey()
-                if (apiKey.isEmpty()) {
-                    promptOutputTextView.text = "Error: API key not configured. Open side drawer to set your Gemini API key."
-                } else {
-                    inputEditText.setText("")
-                    executeAgentTask(userInput, apiKey)
-                }
-            }
-        }
-
-        sendToCloudButton.setOnClickListener {
+        sendAgentButton.setOnClickListener {
             val userInput = inputEditText.text.toString().trim()
             if (userInput.isNotEmpty()) {
                 val apiKey = getStoredApiKey()
@@ -130,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 withContext(Dispatchers.Main) {
                     val currentText = promptOutputTextView.text.toString()
-                    promptOutputTextView.text = "$currentText\n\nUser: $userQuery\n\nGP-Noy Agent: Processing reasoning stream..."
+                    promptOutputTextView.text = "$currentText\n\nUser: $userQuery\n\nGP-Noy Agent: Processing neural stream..."
                 }
 
                 val generativeModel = GenerativeModel(
