@@ -1,40 +1,111 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".MainActivity">
+    android:background="@drawable/void_background">
 
-    <TextView
-        android:id="@+id/titleTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Local LLM to Cloud Generator"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+    <com.example.localtoycloud.GyroscopeView
+        android:id="@+id/gyroscopeContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-    <EditText
-        android:id="@+id/inputEditText"
-        android:layout_width="0dp"
-        android:layout_height="120dp"
-        android:hint="Enter your concept here..."
-        android:gravity="top|start"
-        android:inputType="textMultiLine"
-        android:padding="12dp"
-        android:background="@android:drawable/editbox_background_normal"
-        app:layout_constraintTop_toBottomOf="@id/titleTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="bottom">
 
-    <Button
-        android:id="@+id/generatePromptButton"
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/promptOutputTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/cyber_bubble"
+                        android:padding="16dp"
+                        android:text="Void space initialized. Awaiting user input for local MediaPipe expansion..."
+                        android:textColor="#E0F7FA"
+                        android:textSize="15sp"
+                        android:shadowColor="#8000F0FF"
+                        android:shadowDx="0"
+                        android:shadowDy="0"
+                        android:shadowRadius="8" />
+
+                </LinearLayout>
+            </ScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/cyber_bubble"
+                android:padding="12dp"
+                android:layout_marginTop="12dp">
+
+                <EditText
+                    android:id="@+id/inputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:hint="Enter concept into the void..."
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#80FFFFFF"
+                    android:textSize="16sp"
+                    android:inputType="textMultiLine"
+                    android:maxLines="4"
+                    android:padding="8dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
+
+                    <Button
+                        android:id="@+id/generatePromptButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/cyber_bubble"
+                        android:text="Local LLM"
+                        android:textColor="#00F0FF"
+                        android:textSize="12sp"
+                        android:textAllCaps="false"/>
+
+                    <Space
+                        android:layout_width="8dp"
+                        android:layout_height="wrap_content"/>
+
+                    <Button
+                        android:id="@+id/sendToCloudButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/cyber_bubble"
+                        android:text="Cloud Gemini"
+                        android:textColor="#FF007F"
+                        android:textSize="12sp"
+                        android:textAllCaps="false"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </com.example.localtoycloud.GyroscopeView>
+
+</FrameLayout>        android:id="@+id/generatePromptButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Run Local LLM Prompt Expansion"
