@@ -146,17 +146,23 @@ class MainActivity : AppCompatActivity() {
         builder.show()
     }
 
-    private fun addMessageBubble(text: String, isUser: Boolean) {
+    private fun addMessageBubble(text: String, isUser: Boolean): TextView {
         val bubbleTextView = TextView(this).apply {
             this.text = text
             textSize = 15f
             setPadding(32, 24, 32, 24)
             layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
                 setMargins(0, 8, 0, 16)
+                if (isUser) {
+                    gravity = android.view.Gravity.END
+                } else {
+                    gravity = android.view.Gravity.START
+                }
             }
+            maxWidth = (resources.displayMetrics.widthPixels * 0.8f).toInt()
             if (isUser) {
                 setBackgroundResource(R.drawable.user_bubble)
                 setTextColor(resources.getColor(android.R.color.white, theme))
@@ -173,10 +179,17 @@ class MainActivity : AppCompatActivity() {
         scrollView.post {
             scrollView.fullScroll(ScrollView.FOCUS_DOWN)
         }
+
+        return bubbleTextView
     }
 
     private fun executeAgentTaskWithFallback(userQuery: String, apiKey: String) {
         CoroutineScope(Dispatchers.IO).launch {
+            // Display transient thinking status message
+            val thinkingBubble = withContext(Dispatchers.Main) {
+                addMessageBubble("GP-Noy Agent is thinking...", false)
+            }
+
             val startIndex = modelList.indexOf(selectedModel)
             val fallbackChain = if (startIndex >= 0) {
                 modelList.subList(startIndex, modelList.size) + modelList.subList(0, startIndex)
@@ -212,15 +225,15 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            if (success) {
-                chatHistory.add("user" to userQuery)
-                chatHistory.add("model" to finalResponse)
+            withContext(Dispatchers.Main) {
+                // Remove transient thinking bubble
+                chatContainer.removeView(thinkingBubble)
 
-                withContext(Dispatchers.Main) {
+                if (success) {
+                    chatHistory.add("user" to userQuery)
+                    chatHistory.add("model" to finalResponse)
                     addMessageBubble(finalResponse, false)
-                }
-            } else {
-                withContext(Dispatchers.Main) {
+                } else {
                     addMessageBubble("Agent Execution Error across all fallback models: $lastError", false)
                 }
             }
