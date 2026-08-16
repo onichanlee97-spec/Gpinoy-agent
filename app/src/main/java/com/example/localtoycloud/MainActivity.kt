@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
@@ -27,17 +27,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
-    private lateinit var menuButton: Button
+    private lateinit var menuButton: ImageButton
     private lateinit var modelSpinner: Spinner
     private lateinit var inputEditText: EditText
-    private lateinit var sendAgentButton: Button
+    private lateinit var sendAgentButton: ImageButton
     private lateinit var chatContainer: LinearLayout
     private lateinit var scrollView: ScrollView
 
     private val PREFS_NAME = "CyberPrefs"
     private val KEY_API_KEY = "gemini_api_key"
 
-    private val currentSessionHistory = mutableListOf<Pair<String, String>>()
+    // Multi-session chat storage: Map of Session Name to its respective chat history
+    private val chatSessions = mutableMapOf<String, MutableList<Pair<String, String>>>()
+    private var activeSessionId = "Default Chat"
 
     private val modelList = listOf(
         "gemini-3.7-flash",
@@ -61,6 +63,8 @@ class MainActivity : AppCompatActivity() {
         chatContainer = findViewById(R.id.chatContainer)
         scrollView = findViewById(R.id.scrollView)
 
+        // Initialize default session
+        chatSessions[activeSessionId] = mutableListOf()
         chatContainer.removeAllViews()
 
         setupModelSpinner()
@@ -71,6 +75,16 @@ class MainActivity : AppCompatActivity() {
 
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
+                R.id.nav_new_chat -> {
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    createNewChatSession()
+                    true
+                }
+                R.id.nav_session_1 -> {
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                    switchSession("Default Chat")
+                    true
+                }
                 R.id.nav_settings -> {
                     drawerLayout.closeDrawer(GravityCompat.START)
                     showApiKeyDialog()
@@ -94,6 +108,28 @@ class MainActivity : AppCompatActivity() {
                 addMessageBubble(userInput, true)
                 executeAgentTaskWithPartialStreamingAndAutoCorrection(userInput, apiKey)
             }
+        }
+    }
+
+    private fun createNewChatSession() {
+        val newSessionName = "Chat Session ${chatSessions.size + 1}"
+        chatSessions[newSessionName] = mutableListOf()
+        activeSessionId = newSessionName
+        chatContainer.removeAllViews()
+        
+        // Dynamically update menu item title or add new session to drawer if desired
+        val menu = navigationView.menu
+        menu.add(0, View.generateViewId(), 1, newSessionName).setCheckable(true).setChecked(true)
+    }
+
+    private fun switchSession(sessionName: String) {
+        activeSessionId = sessionName
+        chatContainer.removeAllViews()
+        
+        // Reload history for selected session
+        val history = chatSessions[activeSessionId] ?: mutableListOf()
+        for ((role, text) in history) {
+            addMessageBubble(text, role == "user")
         }
     }
 
@@ -183,7 +219,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun executeAgentTaskWithPartialStreamingAndAutoCorrection(userQuery: String, apiKey: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            // Immediate partial thinking state bubble
             val responseBubble = withContext(Dispatchers.Main) {
                 addMessageBubble("GP-Noy Agent is gathering information...", false)
             }
@@ -199,6 +234,8 @@ class MainActivity : AppCompatActivity() {
             var finalStreamedResponse = ""
             var lastError = ""
 
+            val currentHistory = chatSessions.getOrPut(activeSessionId) { mutableListOf() }
+
             for (model in fallbackChain) {
                 try {
                     val generativeModel = GenerativeModel(
@@ -207,7 +244,7 @@ class MainActivity : AppCompatActivity() {
                     )
 
                     val chat = generativeModel.startChat(
-                        history = currentSessionHistory.map { (role, text) ->
+                        history = currentHistory.map { (role, text) ->
                             content(role) { text(text) }
                         }
                     )
@@ -219,7 +256,6 @@ class MainActivity : AppCompatActivity() {
                         val chunkText = chunk.text ?: ""
                         accumulatedText += chunkText
                         
-                        // Real-time auto-correction pass on partially gathered information
                         val correctedPartialText = applyRealTimeAutoCorrection(accumulatedText)
 
                         withContext(Dispatchers.Main) {
@@ -242,8 +278,8 @@ class MainActivity : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 if (success) {
-                    currentSessionHistory.add("user" to userQuery)
-                    currentSessionHistory.add("model" to finalStreamedResponse)
+                    currentHistory.add("user" to userQuery)
+                    currentHistory.add("model" to finalStreamedResponse)
                     responseBubble.text = finalStreamedResponse
                 } else {
                     responseBubble.text = "Agent Execution Error across all fallback models: $lastError"
@@ -252,19 +288,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Real-time auto-correction and synthesis pass for partial and incoming tokens
-     * Cleans formatting artifacts, normalizes punctuation, and reconciles syntax anomalies
-     * as information streams in during the thinking/generation state.
-     */
     private fun applyRealTimeAutoCorrection(partialText: String): String {
         var corrected = partialText.trim()
-        
-        // Auto-correct common token stuttering or duplicate punctuation artifacts during partial streams
         corrected = corrected.replace("  ", " ")
         corrected = corrected.replace("..", ".")
         
-        // Ensure initial capitalization on streaming chunks if sentence breaks occur
         if (corrected.isNotEmpty() && corrected.length > 2) {
             val firstChar = corrected[0]
             if (firstChar.isLowerCase() && !corrected.startsWith("http")) {
