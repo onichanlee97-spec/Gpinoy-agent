@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <!-- Top Header Bar -->
+                <!-- Top Header Bar with Model Selector Dropdown -->
                 <LinearLayout
                     android:id="@+id/headerLayout"
                     android:layout_width="match_parent"
@@ -38,17 +38,14 @@
                         android:textSize="18sp"
                         android:textStyle="bold"/>
 
-                    <TextView
+                    <Spinner
+                        android:id="@+id/modelSpinner"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="40dp"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="GP-Noy Agent"
-                        android:textColor="#00F0FF"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:shadowColor="#8000F0FF"
-                        android:shadowRadius="6"/>
+                        android:layout_marginHorizontal="12dp"
+                        android:background="@drawable/cyber_bubble"
+                        android:popupBackground="@drawable/cyber_drawer_background"/>
 
                     <Space
                         android:layout_width="40dp"
@@ -79,7 +76,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/cyber_bubble"
                             android:padding="16dp"
-                            android:text="GP-Noy Agent online. Configure your Gemini API key in the side drawer."
+                            android:text="GP-Noy Agent online. Configure your Gemini API key in the side drawer menu."
                             android:textColor="#E0F7FA"
                             android:textSize="15sp"
                             android:shadowColor="#8000F0FF"
