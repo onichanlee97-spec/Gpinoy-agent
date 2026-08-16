@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -34,58 +33,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp"/>
 
-    <Button
-        android:id="@+id/generatePromptButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Run Local LLM Prompt Expansion"
-        app:layout_constraintTop_toBottomOf="@id/inputEditText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
-
-    <TextView
-        android:id="@+id/promptOutputLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Optimized Local Prompt:"
-        xml:space="preserve"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/generatePromptButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"/>
-
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:background="@android:drawable/dialog_holo_light_frame"
-        app:layout_constraintTop_toBottomOf="@id/promptOutputLabel"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp">
-
-        <TextView
-            android:id="@+id/promptOutputTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Local prompt output will appear here..."
-            android:padding="8dp"
-            android:textColor="@android:color/black"/>
-    </ScrollView>
-
-    <Button
-        android:id="@+id/sendToCloudButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Send to Cloud (Gemini API)"
-        app:layout_constraintTop_toBottomOf="@id/scrollView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
     <Button
         android:id="@+id/generatePromptButton"
         android:layout_width="0dp"
