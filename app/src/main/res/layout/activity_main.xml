@@ -141,4 +141,4 @@
         app:itemTextColor="#E0F7FA"
         app:itemIconTint="#00F0FF"/>
 
-</androidx.drawerlayout.drawerlayout> <!-- Fixed closing tag -->
+</androidx.drawerlayout.widget.DrawerLayout>
