@@ -1,7 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_new_chat"
+            android:title="+ New Chat Session" />
+        <item
+            android:id="@+id/nav_session_1"
+            android:title="Session: Default Chat" />
+        <item
             android:id="@+id/nav_settings"
-            android:title="API Key Settings" />
+            android:title="Configure API Key" />
     </group>
 </menu>
