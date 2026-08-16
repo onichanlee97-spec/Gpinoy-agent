@@ -62,7 +62,6 @@ class MainActivity : AppCompatActivity() {
         scrollView = findViewById(R.id.scrollView)
         promptOutputTextView = findViewById(R.id.promptOutputTextView)
 
-        // Set initial welcome text inside agent bubble
         promptOutputTextView.text = "GP-Noy Agent online.\nConfigure your Gemini API key in the side drawer menu."
 
         setupModelSpinner()
@@ -135,12 +134,12 @@ class MainActivity : AppCompatActivity() {
         input.setPadding(48, 32, 48, 32)
         builder.setView(input)
 
-        builder.positiveButton("Save") { _, _ ->
+        builder.setPositiveButton("Save") { _, _ ->
             val newKey = input.text.toString().trim()
             saveApiKey(newKey)
             addMessageBubble("Gemini API key updated in local storage.", false)
         }
-        builder.negativeButton("Cancel") { dialog, _ ->
+        builder.setNegativeButton("Cancel") { dialog, _ ->
             dialog.cancel()
         }
 
@@ -150,7 +149,7 @@ class MainActivity : AppCompatActivity() {
     private fun addMessageBubble(text: String, isUser: Boolean) {
         val bubbleTextView = TextView(this).apply {
             this.text = text
-            textSize = 15sp
+            textSize = 15f
             setPadding(32, 24, 32, 24)
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -161,29 +160,20 @@ class MainActivity : AppCompatActivity() {
             if (isUser) {
                 setBackgroundResource(R.drawable.user_bubble)
                 setTextColor(resources.getColor(android.R.color.white, theme))
-                shadowColor = resources.getColor(android.R.color.holo_blue_light, theme)
-                shadowRadius = 8f
+                setShadowLayer(8f, 0f, 0f, resources.getColor(android.R.color.holo_blue_light, theme))
             } else {
                 setBackgroundResource(R.drawable.agent_bubble)
                 setTextColor(resources.getColor(android.R.color.white, theme))
-                shadowColor = resources.getColor(android.R.color.holo_purple, theme)
-                shadowRadius = 8f
+                setShadowLayer(8f, 0f, 0f, resources.getColor(android.R.color.holo_purple, theme))
             }
         }
 
         chatContainer.addView(bubbleTextView)
         
-        // Scroll down to latest message
         scrollView.post {
             scrollView.fullScroll(ScrollView.FOCUS_DOWN)
         }
     }
-
-    private fun android.app.AlertDialog.Builder.positiveButton(text: String, onClick: (android.app.AlertDialog, Int) -> Unit) =
-        this.setPositiveButton(text) { dialog, which -> onClick(dialog as android.app.AlertDialog, which) }
-
-    private fun android.app.AlertDialog.Builder.negativeButton(text: String, onClick: (android.app.AlertDialog, Int) -> Unit) =
-        this.setNegativeButton(text) { dialog, which -> onClick(dialog as android.app.AlertDialog, which) }
 
     private fun executeAgentTaskWithFallback(userQuery: String, apiKey: String) {
         CoroutineScope(Dispatchers.IO).launch {
