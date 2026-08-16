@@ -52,7 +52,7 @@
                         android:layout_height="40dp"/>
                 </LinearLayout>
 
-                <!-- Chat Messages Scroll Area with Dynamic Separate Bubbles Container -->
+                <!-- Chat Messages Scroll Area with Dynamic Size-Dependent Bubbles -->
                 <ScrollView
                     android:id="@+id/scrollView"
                     android:layout_width="match_parent"
@@ -72,15 +72,15 @@
 
                         <TextView
                             android:id="@+id/promptOutputTextView"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:maxWidth="280dp"
                             android:background="@drawable/agent_bubble"
                             android:padding="16dp"
-                            android:text="GP-Noy Agent online. Configure your Gemini API key in the side drawer menu."
+                            android:text="GP-Noy Agent online.\nConfigure your Gemini API key in the side drawer menu."
                             android:textColor="#E0F7FA"
                             android:textSize="15sp"
-                            android:shadowColor="#80FF007F"
-                            android:shadowRadius="8"
                             android:layout_marginBottom="12dp"/>
 
                     </LinearLayout>
