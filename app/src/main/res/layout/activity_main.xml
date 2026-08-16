@@ -12,30 +12,30 @@
         <com.example.localtoycloud.GyroscopeView
             android:id="@+id/gyroscopeContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp">
+            android:layout_height="match_parent">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:gravity="bottom">
+                android:layout_height="match_parent">
 
+                <!-- Top Header Bar -->
                 <LinearLayout
+                    android:id="@+id/headerLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_height="56dp"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/cyber_drawer_background"
                     android:gravity="center_vertical"
-                    android:paddingBottom="12dp">
+                    android:paddingHorizontal="16dp">
 
                     <Button
                         android:id="@+id/menuButton"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:background="@drawable/cyber_bubble"
                         android:text="≡"
                         android:textColor="#00F0FF"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"/>
 
                     <TextView
@@ -43,7 +43,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="Gemini Cyber Gateway"
+                        android:text="GP-Noy Agent"
                         android:textColor="#00F0FF"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -51,23 +51,27 @@
                         android:shadowRadius="6"/>
 
                     <Space
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"/>
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"/>
                 </LinearLayout>
 
+                <!-- Chat Messages Scroll Area -->
                 <ScrollView
                     android:id="@+id/scrollView"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/inputContainer"
+                    android:layout_below="@id/headerLayout"
                     android:fillViewport="true"
+                    android:padding="16dp"
                     android:scrollbars="none">
 
                     <LinearLayout
+                        android:id="@+id/chatContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:paddingBottom="16dp">
+                        android:gravity="bottom">
 
                         <TextView
                             android:id="@+id/promptOutputTextView"
@@ -75,74 +79,56 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/cyber_bubble"
                             android:padding="16dp"
-                            android:text="Void gateway online. Configure your Gemini API key in the side drawer menu."
+                            android:text="GP-Noy Agent online. Configure your Gemini API key in the side drawer."
                             android:textColor="#E0F7FA"
                             android:textSize="15sp"
                             android:shadowColor="#8000F0FF"
-                            android:shadowDx="0"
-                            android:shadowDy="0"
                             android:shadowRadius="8" />
 
                     </LinearLayout>
                 </ScrollView>
 
+                <!-- ChatGPT Style Floating Input Bubble -->
                 <LinearLayout
+                    android:id="@+id/inputContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_alignParentBottom="true"
                     android:background="@drawable/cyber_bubble"
-                    android:padding="12dp"
-                    android:layout_marginTop="12dp">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:layout_margin="12dp">
 
                     <EditText
                         android:id="@+id/inputEditText"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:hint="Enter concept into the void..."
+                        android:hint="Message GP-Noy Agent..."
                         android:textColor="#FFFFFF"
                         android:textColorHint="#80FFFFFF"
-                        android:textSize="16sp"
+                        android:textSize="15sp"
                         android:inputType="textMultiLine"
                         android:maxLines="4"
-                        android:padding="8dp"/>
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="8dp"/>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="8dp">
+                    <Button
+                        android:id="@+id/sendAgentButton"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/cyber_bubble"
+                        android:text="↑"
+                        android:textColor="#00F0FF"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textAllCaps="false"/>
 
-                        <Button
-                            android:id="@+id/generatePromptButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/cyber_bubble"
-                            android:text="Refine Prompt"
-                            android:textColor="#00F0FF"
-                            android:textSize="12sp"
-                            android:textAllCaps="false"/>
-
-                        <Space
-                            android:layout_width="8dp"
-                            android:layout_height="wrap_content"/>
-
-                        <Button
-                            android:id="@+id/sendToCloudButton"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:background="@drawable/cyber_bubble"
-                            android:text="Generate Media"
-                            android:textColor="#FF007F"
-                            android:textSize="12sp"
-                            android:textAllCaps="false"/>
-
-                    </LinearLayout>
                 </LinearLayout>
 
-            </LinearLayout>
+            </RelativeLayout>
         </com.example.localtoycloud.GyroscopeView>
 
     </FrameLayout>
